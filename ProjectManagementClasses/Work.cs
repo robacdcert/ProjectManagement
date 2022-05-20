@@ -6,7 +6,11 @@ using System.Threading.Tasks;
 
 namespace ProjectManagementClasses
 {
-    internal class Work
+    public class Work
     {
+        public static int Id { get; set; } = 0;
+        public static int ProjectId { get; set; } = 0;
+        public virtual Projects? Projects { get; set; }
+
     }
 }
