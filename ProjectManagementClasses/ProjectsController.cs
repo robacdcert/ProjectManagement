@@ -9,52 +9,52 @@ namespace ProjectManagementClasses
 {
     public class ProjectsController
     {
-        public string ConnectionString { get; set; }
-        public SqlConnection SqlConnection { get; set; }
+        AppDbContext _context = new AppDbContext();
 
-        public List<Projects> GetAllProjects()
+        public List<Projects> GetProjects()
         {
-            var projects = new List<Projects>();
-            var sql = "Select * from Projects";
-            var cmd = new SqlCommand(sql, SqlConnection);
-            var reader = cmd.ExecuteReader();
-            while (reader.Read())
-            {
-                var project = new Projects();
-                project.Id = Convert.ToInt32(reader["Id"]);
-                project.Description = Convert.ToString(reader["Description"]);
-                project.EstimatedHours = Convert.ToInt32(reader["EstimatedHours"]);
-                project.ActualHours = Convert.ToInt32(reader["ActualHours"]);
-                project.Status = Convert.ToString(reader["Status"]);
-            }
+            return _context.Projects.ToList();
+        }
 
-            reader.Close();
-            SqlConnection.Close();
+        public Projects GetProjects(int id)
+        {
+            return _context.Projects.Find(id)!;
+        }
+
+        public Projects AddProjects(Projects projects)
+        {
+            _context.Projects.Add(projects);
+            var rowsAffected = _context.SaveChanges();
+            if (rowsAffected != 1)
+            {
+                throw new Exception("Add project failed!");
+            }
             return projects;
         }
 
-        public void OpenConnection()
+        public void UpdateProjects(Projects projects)
         {
-            SqlConnection = new SqlConnection(ConnectionString);
-            SqlConnection.Open();
-            if (SqlConnection.State != System.Data.ConnectionState.Open)
+            _context.Entry(projects).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+            var rowsAffected = _context.SaveChanges();
+            if (rowsAffected != 1)
             {
-                throw new Exception("Connection did not open");
+                throw new Exception("Update projects failed!");
             }
-
         }
 
-        public void CloseConnection()
+        public void DeleteProjects(int Id)
         {
-            SqlConnection.Close();
-        }
-
-        public ProjectsController(string ServerInstance, string Database)
-        {
-            ConnectionString = $"server={ServerInstance};" +
-                               $"database={Database};" +
-                               "TrustServerCertificate=True;" +
-                               "trusted_connection=true;";
+            var projects = GetProjects(Id);
+            if (projects is null)
+            {
+                throw new Exception("Projects not found!");
+            }
+            _context.Projects.Remove(projects);
+            var rowsAffected = _context.SaveChanges();
+            if (rowsAffected != 1)
+            {
+                throw new Exception("Delete projects failed!");
+            }
         }
     }
 }
