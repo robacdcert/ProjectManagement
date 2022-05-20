@@ -22,8 +22,8 @@ namespace ProjectManagementClasses
             {
                 var work = new Work();
                 work.Id = Convert.ToInt32(reader["Id"]);
-                work.ProjectId = Convert.ToInt32(reader["ProjectId"]);
-                work.ResourceId = Convert.ToInt32(reader["ResourceId"]);
+                work.ProjectsId = Convert.ToInt32(reader["ProjectId"]);
+                work.ResourcesId = Convert.ToInt32(reader["ResourceId"]);
                 work.Description = Convert.ToString(reader["Description"]);
                 work.Hours = Convert.ToInt32(reader["Hours"]);
             }

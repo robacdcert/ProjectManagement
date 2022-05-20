@@ -33,6 +33,17 @@ namespace ProjectManagementClasses
             return projects;
         }
 
+        public void OpenConnection()
+        {
+            SqlConnection = new SqlConnection(ConnectionString);
+            SqlConnection.Open();
+            if (SqlConnection.State != System.Data.ConnectionState.Open)
+            {
+                throw new Exception("Connection did not open");
+            }
+
+        }
+
         public void CloseConnection()
         {
             SqlConnection.Close();
