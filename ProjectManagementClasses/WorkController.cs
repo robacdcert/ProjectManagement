@@ -1,4 +1,5 @@
 ﻿using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,53 +10,52 @@ namespace ProjectManagementClasses
 {
     public class WorkController
     {
-        public string ConnectionString { get; set; }
-        public SqlConnection SqlConnection { get; set; }
+        AppDbContext _context = new AppDbContext();
 
-        public List<Work> GetAllWorks()
+        public List<Work> GetWorks()
         {
-            var works = new List<Work>();
-            var sql = "Select * from Work";
-            var cmd = new SqlCommand(sql, SqlConnection);
-            var reader = cmd.ExecuteReader();
-            while (reader.Read())
+            return _context.Work.ToList();
+        }
+
+        public Work GetWork(int id)
+        {
+            return _context.Work.Find(id);
+        }
+
+        public Work RecordWork(Work work)
+        {
+            _context.Work.Add(work);
+            var rowsAffected = _context.SaveChanges();
+            if (rowsAffected != 1)
             {
-                var work = new Work();
-                work.Id = Convert.ToInt32(reader["Id"]);
-                work.ProjectsId = Convert.ToInt32(reader["ProjectId"]);
-                work.ResourcesId = Convert.ToInt32(reader["ResourceId"]);
-                work.Description = Convert.ToString(reader["Description"]);
-                work.Hours = Convert.ToInt32(reader["Hours"]);
+                throw new Exception("Recording work failed!");
             }
-
-            reader.Close();
-            SqlConnection.Close();
-            return works;
+            return work;
         }
 
-        public void OpenConnection()
+        public void UpdateWork(Work work)
         {
-            SqlConnection = new SqlConnection(ConnectionString);
-            SqlConnection.Open();
-            if (SqlConnection.State != System.Data.ConnectionState.Open)
+            _context.Entry(work).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+            var rowsAffected = _context.SaveChanges();
+            if (rowsAffected != 1)
             {
-                throw new Exception("Connection did not open");
+                throw new Exception("Update work failed!");
             }
-
         }
 
-        public void CloseConnection()
+        public void DeleteWork(int Id)
         {
-            SqlConnection.Close();
-        }
-
-
-        public WorkController(string ServerInstance, string Database)
-        {
-            ConnectionString = $"server = {ServerInstance};"
-                                + $"database = {Database};"
-                                + "TrustServerCertificate=true;"
-                                + "trusted_connection=true;";
+            var work = GetWork(Id);
+            if (work is null)
+            {
+                throw new Exception(" not found!");
+            }
+            _context.Work.Remove(work);
+            var rowsAffected = _context.SaveChanges();
+            if (rowsAffected != 1)
+            {
+                throw new Exception("Delete work failed!");
+            }
         }
     }
 }
