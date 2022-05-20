@@ -8,11 +8,11 @@ namespace ProjectManagementClasses
 {
     public class Resources
     {
-        public static int Id { get; set; } = 0;
-        public static int ProjectId { get; set; } 
+        public int Id { get; set; } = 0;
+        public int ProjectId { get; set; } 
         public virtual Projects? Projects { get; set; }
-        public static string Name { get; set; } = string.Empty;
-        public static int HoursPerDay { get; set; } = 0;
+        public string Name { get; set; } = string.Empty;
+        public int HoursPerDay { get; set; }
 
     }
 }
