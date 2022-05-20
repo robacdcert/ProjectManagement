@@ -12,7 +12,7 @@ namespace ProjectManagementClasses
         public string ConnectionString { get; set; }
         public SqlConnection SqlConnection { get; set; }
 
-        public List<Resources> GetAllProjects()
+        public List<Resources> GetAllResources()
         {
             var resources = new List<Resources>();
             var sql = "Select * from Resources";
@@ -30,6 +30,17 @@ namespace ProjectManagementClasses
             reader.Close();
             SqlConnection.Close();
             return resources;
+        }
+
+        public void OpenConnection()
+        {
+            SqlConnection = new SqlConnection(ConnectionString);
+            SqlConnection.Open();
+            if (SqlConnection.State != System.Data.ConnectionState.Open)
+            {
+                throw new Exception("Connection did not open");
+            }
+
         }
 
         public void CloseConnection()

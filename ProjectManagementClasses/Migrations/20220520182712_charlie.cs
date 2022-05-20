@@ -4,7 +4,7 @@
 
 namespace ProjectManagementClasses.Migrations
 {
-    public partial class init : Migration
+    public partial class charlie : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -30,8 +30,7 @@ namespace ProjectManagementClasses.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    ProjectId = table.Column<int>(type: "int", nullable: false),
-                    ProjectsId = table.Column<int>(type: "int", nullable: true),
+                    ProjectsId = table.Column<int>(type: "int", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     HoursPerDay = table.Column<int>(type: "int", nullable: false)
                 },
@@ -42,35 +41,36 @@ namespace ProjectManagementClasses.Migrations
                         name: "FK_Resources_Projects_ProjectsId",
                         column: x => x.ProjectsId,
                         principalTable: "Projects",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Works",
+                name: "Work",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    ProjectId = table.Column<int>(type: "int", nullable: false),
-                    ProjectsId = table.Column<int>(type: "int", nullable: true),
-                    ResourceId = table.Column<int>(type: "int", nullable: false),
-                    ResourcesId = table.Column<int>(type: "int", nullable: true),
+                    ProjectsId = table.Column<int>(type: "int", nullable: false),
+                    ResourcesId = table.Column<int>(type: "int", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Hours = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Works", x => x.Id);
+                    table.PrimaryKey("PK_Work", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Works_Projects_ProjectsId",
+                        name: "FK_Work_Projects_ProjectsId",
                         column: x => x.ProjectsId,
                         principalTable: "Projects",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Works_Resources_ResourcesId",
+                        name: "FK_Work_Resources_ResourcesId",
                         column: x => x.ResourcesId,
                         principalTable: "Resources",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
@@ -79,20 +79,20 @@ namespace ProjectManagementClasses.Migrations
                 column: "ProjectsId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Works_ProjectsId",
-                table: "Works",
+                name: "IX_Work_ProjectsId",
+                table: "Work",
                 column: "ProjectsId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Works_ResourcesId",
-                table: "Works",
+                name: "IX_Work_ResourcesId",
+                table: "Work",
                 column: "ResourcesId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Works");
+                name: "Work");
 
             migrationBuilder.DropTable(
                 name: "Resources");

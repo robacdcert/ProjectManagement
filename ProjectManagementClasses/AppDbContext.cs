@@ -10,7 +10,7 @@ namespace ProjectManagementClasses
     public class AppDbContext : DbContext
     {
 
-        public virtual DbSet<Work> Works { get; set; } = null!;
+        public virtual DbSet<Work> Work { get; set; } = null!;
         public virtual DbSet<Projects> Projects { get; set; } = null!;
         public virtual DbSet<Resources> Resources { get; set; } = null!;
 
