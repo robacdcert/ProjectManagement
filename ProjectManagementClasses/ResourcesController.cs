@@ -1,4 +1,5 @@
 ﻿using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,51 +10,52 @@ namespace ProjectManagementClasses
 {
     public class ResourcesController
     {
-        public string ConnectionString { get; set; }
-        public SqlConnection SqlConnection { get; set; }
+        private readonly AppDbContext _context = new AppDbContext();
 
-        public List<Resources> GetAllResources()
+        public List<Resources> GetResources()
         {
-            var resources = new List<Resources>();
-            var sql = "Select * from Resources";
-            var cmd = new SqlCommand(sql, SqlConnection);
-            var reader = cmd.ExecuteReader();
-            while (reader.Read())
-            {
-                var resource = new Resources();
-                resource.Id = Convert.ToInt32(reader["Id"]);
-                resource.ProjectsId = Convert.ToInt32(reader["ProjectId"]);
-                resource.Name = Convert.ToString(reader["Name"]);
-                resource.HoursPerDay = Convert.ToInt32(reader["HoursPerDay"]);
-            }
+            return _context.Resources.ToList();
+        }
 
-            reader.Close();
-            SqlConnection.Close();
+        public Resources GetResources(int id)
+        {
+            return _context.Resources.Find(id);
+        }
+
+        public Resources AddResources(Resources resources)
+        {
+            _context.Resources.Add(resources);
+            var rowsAffected = _context.SaveChanges();
+            if(rowsAffected != 0)
+            {
+                throw new Exception("Add resources failed");
+            }
             return resources;
         }
 
-        public void OpenConnection()
+        public void DeleteResources(int id)
         {
-            SqlConnection = new SqlConnection(ConnectionString);
-            SqlConnection.Open();
-            if (SqlConnection.State != System.Data.ConnectionState.Open)
+            var resources = GetResources(id);
+            if (resources is null)
             {
-                throw new Exception("Connection did not open");
+                throw new Exception("Resources Failed");
             }
-
+            _context.Resources.Remove(resources);
+            var rowsAffected = _context.SaveChanges();
+            if (rowsAffected != 1)
+            {
+                throw new Exception("DeleteVendor Failed");
+            }
         }
-
-        public void CloseConnection()
+        public void UpdateResources(Resources vendor)
         {
-            SqlConnection.Close();
+            _context.Entry(vendor).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+            var rowsAffected = _context.SaveChanges();
+            if (rowsAffected != 1)
+            {
+                throw new Exception("Update Vendor Failed");
+            }
         }
 
-        public ResourcesController(string ServerInstance, string Database)
-        {
-            ConnectionString = $"server={ServerInstance};" +
-                               $"database={Database};" +
-                               "TrustServerCertificate=True;" +
-                               "trusted_connection=true;";
-        }
     }
 }
