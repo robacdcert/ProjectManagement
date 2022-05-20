@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ProjectManagementClasses
 {
-    internal class AppDbContext : DbContext
+    public class AppDbContext : DbContext
     {
 
         public virtual DbSet<Work> Works { get; set; } = null!;

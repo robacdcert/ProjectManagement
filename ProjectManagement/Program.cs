@@ -1,11 +1,15 @@
 ﻿using ProjectManagementClasses;
+using Microsoft.EntityFrameworkCore.Design;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.SqlServer;
 
-Console.WriteLine("Welcome to Project Management! Select from the following:");
-Console.WriteLine("'1'   Allocate resources to a project");
-Console.WriteLine("'2'   Record work by resource");
-Console.WriteLine("'3'   Update projext");
-var input = Console.ReadLine();
-if (input == "1")
-{
+const string server = "localhost\\sqlexpress";
+const string database = "ProjectManagementDb";
 
-}
+var db = new AppDbContext();
+
+var workctrl = new WorkController(server, database);
+workctrl.OpenConnection();
+
+var works = workctrl.GetAllWorks();
+

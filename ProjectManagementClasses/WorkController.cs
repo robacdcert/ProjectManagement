@@ -12,19 +12,26 @@ namespace ProjectManagementClasses
         public string ConnectionString { get; set; }
         public SqlConnection SqlConnection { get; set; }
 
+        public List<Work> GetAllWorks()
+        {
+            var works = new List<Work>();
+            var sql = "Select * from Work";
+            var cmd = new SqlCommand(sql, SqlConnection);
+            var reader = cmd.ExecuteReader();
+            while (reader.Read())
+            {
+                var work = new Work();
+                work.Id = Convert.ToInt32(reader["Id"]);
+                work.ProjectId = Convert.ToInt32(reader["ProjectId"]);
+                work.ResourceId = Convert.ToInt32(reader["ResourceId"]);
+                work.Description = Convert.ToString(reader["Description"]);
+                work.Hours = Convert.ToInt32(reader["Hours"]);
+            }
 
-
-
-
-
-
-
-
-
-
-
-
-
+            reader.Close();
+            SqlConnection.Close();
+            return works;
+        }
 
         public void OpenConnection()
         {
