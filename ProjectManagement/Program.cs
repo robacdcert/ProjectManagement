@@ -12,4 +12,4 @@ var workctrl = new WorkController(server, database);
 workctrl.OpenConnection();
 
 var works = workctrl.GetAllWorks();
-
+var projects = workctrl.GetAllWorks();
