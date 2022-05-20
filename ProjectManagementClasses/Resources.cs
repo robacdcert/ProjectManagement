@@ -9,7 +9,7 @@ namespace ProjectManagementClasses
     public class Resources
     {
         public int Id { get; set; } = 0;
-        public int ProjectId { get; set; } 
+        public int ProjectsId { get; set; } 
         public virtual Projects? Projects { get; set; }
         public string Name { get; set; } = string.Empty;
         public int HoursPerDay { get; set; }
