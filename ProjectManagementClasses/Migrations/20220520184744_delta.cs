@@ -4,7 +4,7 @@
 
 namespace ProjectManagementClasses.Migrations
 {
-    public partial class charlie : Migration
+    public partial class delta : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -51,8 +51,8 @@ namespace ProjectManagementClasses.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    ProjectsId = table.Column<int>(type: "int", nullable: false),
-                    ResourcesId = table.Column<int>(type: "int", nullable: false),
+                    ProjectsId = table.Column<int>(type: "int", nullable: true),
+                    ResourcesId = table.Column<int>(type: "int", nullable: true),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Hours = table.Column<int>(type: "int", nullable: false)
                 },
@@ -63,14 +63,12 @@ namespace ProjectManagementClasses.Migrations
                         name: "FK_Work_Projects_ProjectsId",
                         column: x => x.ProjectsId,
                         principalTable: "Projects",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Work_Resources_ResourcesId",
                         column: x => x.ResourcesId,
                         principalTable: "Resources",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateIndex(
